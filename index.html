@@ -192,21 +192,25 @@
         let reader = new FileReader();
         reader.onload = function(event) {
             image.src = event.target.result;
+            console.log(image.width, image.height, image.src);
 
-            canvas.width = image.width;
-            canvas.height = image.height;
+            let waitSize = setInterval(() => { if(image.width > 0 && image.height > 0) {
+                canvas.width = image.width;
+                canvas.height = image.height;
 
-            let containerWidth = document.getElementById('canvas-container').offsetWidth;
-            let newHeight = containerWidth * image.height/image.width;
+                containerWidth = document.getElementById('canvas-container').offsetWidth;
+                newHeight = containerWidth * image.height/image.width;
 
-            canvas.style.height = `${newHeight}px`;
+                canvas.style.height = `${newHeight}px`;
 
-            ctx.drawImage(image, 0, 0);
-            ctx.font = fontSize + 'px Tajawal';
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
+                ctx.drawImage(image, 0, 0);
+                ctx.font = fontSize + 'px Tajawal';
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
 
-            updateText();
+                updateText();
+                clearInterval(waitSize);
+            }});
         }
         reader.readAsDataURL(file);
     });
