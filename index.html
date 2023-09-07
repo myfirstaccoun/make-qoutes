@@ -29,7 +29,7 @@
     </div>
 
     <div id="text-position-input">
-        <label>حرك للأعلاى بمقدار</label>
+        <label>حرك للأعلى بمقدار</label>
         <input type="number" id="text-top" value="0">
 
         <label>حرك لليمين بمقدار</label>
@@ -251,6 +251,11 @@
     fontSizeInput.addEventListener('input', function() {
         fontSize = parseInt(this.value);
         ctx.font = fontSize + 'px Tajawal';
+        updateText();
+    });
+
+    // تغيير حجم النص
+    textColorInput.addEventListener('input', function() {
         updateText();
     });
 
