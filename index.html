@@ -8,8 +8,19 @@
 
 <body>
 <div id="editor">
+    
     <label for="text">أضف الإقتباسات</label>
     <textarea id="text" rows="4"></textarea>
+    
+    <div id="text-font-input">
+        <label>اكتب اسم <a href="https://fonts.google.com/?subset=arabic&noto.script=Arab" target="_blank">الخط</a></label>
+        <input type="text" id="text-font" value="Tajawal">
+    </div>
+    
+    <div id="font-bold-input">
+        <label>مدى غلظة الخط</label>
+        <input type="number" id="text-bold" value="700">
+    </div>
 
     <label class="upload-label" for="file">ارفع القالب</label>
     
@@ -147,6 +158,10 @@
         background-color: #005577;
     }
 
+    #text-font-input, #font-bold-input {
+        margin-bottom: 10px;
+    }
+
     #fontsize-input {
         margin: 15px 0;
     }
@@ -212,6 +227,10 @@
     }
 </style>
 
+<style id="font-style">
+    @import url("https://fonts.googleapis.com/css2?family=Tajawal:wght@700&display=swap");
+</style>
+
 <script>
     let editor = document.querySelector("#editor");
     let image = document.getElementById("image");
@@ -223,6 +242,11 @@
     let canvasHigh = document.getElementById("canvas-high-resolution");
     let ctx = canvas.getContext("2d");
     let ctxHigh = canvasHigh.getContext("2d");
+    // نوع الخط
+    let fontType = "Tajawal";
+    let fontBold = 300;
+    let fontTypeInput = document.getElementById("text-font");
+    let fontBoldInput = document.getElementById("text-bold");
     // حجم الخط
     let fontSize = 60;
     let fontSizeInput = document.getElementById("fontsize");
@@ -239,7 +263,15 @@
     window.onload = () => {
         fontSizeInput.value = fontSize;
         ctx.fillStyle = textColorInput.value;
+        updateFont();
+        updateText();
     }
+
+    // تغيير نوع الخط
+    fontTypeInput.addEventListener("textInput", updateFont);
+    fontTypeInput.addEventListener("input", updateFont);
+    fontBoldInput.addEventListener("textInput", updateFont);
+    fontBoldInput.addEventListener("input", updateFont);
 
     // رفع القالب واظهاره
     fileInput.addEventListener("change", function() {
@@ -261,13 +293,13 @@
                 canvas.style.height = `${newHeight}px`;
 
                 ctx.drawImage(image, 0, 0);
-                ctx.font = fontSize + "px Tajawal";
+                ctx.font = fontSize + `px ${fontType}`;
                 ctx.textAlign = "center";
                 ctx.textBaseline = "middle";
 
                 ctxHigh.drawImage(imageHigh, 0, 0);
                 ratioHigh = canvasHigh.width/canvas.width;
-                ctxHigh.font = fontSize*ratioHigh + "px Tajawal";
+                ctxHigh.font = fontSize*ratioHigh + `px ${fontType}`;
                 ctxHigh.textAlign = "center";
                 ctxHigh.textBaseline = "middle";
 
@@ -281,12 +313,12 @@
     // تغيير حجم النص
     fontSizeInput.addEventListener("input", function() {
         fontSize = parseInt(this.value);
-        ctx.font = fontSize + "px Tajawal";
-        ctxHigh.font = fontSize*ratioHigh + "px Tajawal";
+        ctx.font = fontSize + `px ${fontType}`;
+        ctxHigh.font = fontSize*ratioHigh + `px ${fontType}`;
         updateText();
     });
 
-    // تغيير حجم النص
+    // تغيير لون النص
     textColorInput.addEventListener("input", function() {
         updateText();
     });
@@ -331,6 +363,18 @@
         canvasHigh = document.getElementById("canvas-high-resolution");
         let dataURL = canvasHigh.toDataURL("image/png");
         submitButton.href = dataURL;
+    }
+
+    // دالة تغيير نوع الخط
+    function updateFont() {
+        fontType = fontTypeInput.value;
+        fontBold = fontBoldInput.value;
+        let styles = document.querySelector("style#font-style");
+        styles.innerText = '@import url("https://fonts.googleapis.com/css2?family=' + fontType + ':wght@' + fontBold + '&display=swap");';
+
+        ctx.font = fontSize + `px ${fontType}`;
+        ctxHigh.font = fontSize*ratioHigh + `px ${fontType}`;
+        updateText();
     }
 
     // تنزيل الإقتباس
