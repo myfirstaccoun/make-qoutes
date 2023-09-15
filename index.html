@@ -12,12 +12,12 @@
     <label for="text">أضف الإقتباسات</label>
     <textarea id="text" rows="4"></textarea>
     
-    <div id="text-font-input">
+    <div id="text-font-input" class="input">
         <label>اكتب اسم <a href="https://fonts.google.com/?subset=arabic&noto.script=Arab" target="_blank">الخط</a></label>
         <input type="text" id="text-font" value="Tajawal">
     </div>
     
-    <div id="font-bold-input">
+    <div id="font-bold-input" class="input">
         <label>مدى غلظة الخط</label>
         <input type="number" id="text-bold" value="700">
     </div>
@@ -29,22 +29,34 @@
         <canvas id="canvas"></canvas>
     </div>
 
-    <div id="fontsize-input">
+    <div id="fontsize-input" class="input">
         <label for="fontsize">حجم الخط</label>
         <input type="number" id="fontsize" name="fontsize" value="60" min="1" max="200">
     </div>
 
-    <div id="color-input">
+    <div id="color-input" class="input">
         <label for="text-color">لون الخط</label>
         <input type="color" id="text-color" name="text-color" value="#000000">
     </div>
 
-    <div id="text-position-input">
+    <div id="text-top-position-input" class="input">
         <label>حرك للأعلى بمقدار</label>
         <input type="number" id="text-top" value="0">
+    </div>
 
+    <div id="text-right-position-input" class="input">
         <label>حرك لليمين بمقدار</label>
         <input type="number" id="text-right" value="0">
+    </div>
+
+    <div id="text-rotate-input" class="input">
+        <label>درجة دوران الخط</label>
+        <input type="number" id="text-rotate" value="0" min="-180" max="180">
+    </div>
+
+    <div id="text-line-height-input" class="input">
+        <label>ارتفاع السطر</label>
+        <input type="number" id="line-height" value="0" min="0">
     </div>
 
     <input type="file" id="file">
@@ -84,6 +96,10 @@
         border-radius: 10px;
         box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
         padding: 30px;
+    }
+
+    .input {
+        margin: 5px 0;
     }
 
     label {
@@ -225,6 +241,10 @@
             font-size: 16px;
         }
     }
+
+    .rotate-text {
+        transform-origin: center bottom;
+    }
 </style>
 
 <style id="font-style">
@@ -232,6 +252,14 @@
 </style>
 
 <script>
+    function toRadian(degree) {
+        return degree*Math.PI/180;
+    }
+
+    function roundTo(num, toNum=10) {// num=13.2345, toNum=10 ==> 13.2
+        return Math.round(num*toNum)/toNum;
+    }
+
     let editor = document.querySelector("#editor");
     let image = document.getElementById("image");
     let imageHigh = document.getElementById("image-high-resolution");
@@ -250,12 +278,21 @@
     // حجم الخط
     let fontSize = 60;
     let fontSizeInput = document.getElementById("fontsize");
-    // مكان الخط
+    let lineHeight = fontSize * 1.3; // ارتفاع السطر
+    let lineHeightInput = document.getElementById("line-height");
+    // مكان النص
     let textTopInput = document.getElementById("text-top");
     let textRightInput = document.getElementById("text-right");
+    let textRotateInput = document.getElementById("text-rotate");
     let textTop = 0;
     let textRight = 0;
-    // لون الخط
+    // دوران النص
+    let textRotate = 0;
+    let nk = 0; // نق
+    let rotateLen = 0;
+    let rotateX = 0;
+    let rotateY = 0;
+    // لون النص
     let textColorInput = document.getElementById("text-color");
     // النسبة بين الصورة الأصلية والمعروضة
     let ratioHigh = 1;
@@ -303,6 +340,8 @@
                 ctxHigh.textAlign = "center";
                 ctxHigh.textBaseline = "middle";
 
+                lineHeightInput.value = roundTo(fontSize*1.3, 10);
+
                 updateText();
                 clearInterval(waitSize);
             }});
@@ -315,6 +354,14 @@
         fontSize = parseInt(this.value);
         ctx.font = fontSize + `px ${fontType}`;
         ctxHigh.font = fontSize*ratioHigh + `px ${fontType}`;
+        lineHeight = roundTo(fontSize*1.3, 10);
+        lineHeightInput.value = lineHeight;
+        updateText();
+    });
+    
+    // تغيير ارتفاع السطر
+    lineHeightInput.addEventListener("input", function() {
+        lineHeight = parseInt(lineHeightInput.value);
         updateText();
     });
 
@@ -323,7 +370,7 @@
         updateText();
     });
 
-    // تغيير مكان الخط
+    // تغيير مكان النص
     textTopInput.addEventListener("input", function() {
         textTop = -1 * parseInt(this.value);
         updateText();
@@ -334,30 +381,56 @@
         updateText();
     });
 
+    // تغيير زاوية دوران النص
+    textRotateInput.addEventListener("input", function() {
+        textRotate = parseInt(this.value);
+        updateText();
+    });
+
     // تغيير النص على القالب
     textInput.addEventListener("textInput", updateText);
     textInput.addEventListener("input", updateText);
 
-    // دالة تغيير النص على القالب وتغيير لون الخط
+    // دالة تغيير النص على القالب وتغيير لون النص
     function updateText() {
-        let lineHeight = fontSize * 1.3;
-        let lines = textInput.value.split("\n");
+        let lines = textInput.value.split("\n").filter((line) => {
+            return line.trim() !== '';
+        });
         ctx.fillStyle = textColorInput.value; // اللون
         ctxHigh.fillStyle = textColorInput.value; // اللون
-
+        
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctxHigh.clearRect(0, 0, canvasHigh.width, canvasHigh.height);
 
         canvas.width == 0? ctx.drawImage(image, 0, 0) : ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
         ctxHigh.drawImage(imageHigh, 0, 0);
         
+        let center = (lines.length - 1) * lineHeight / 2;
+
         for (let i = 0; i < lines.length; i++) {
+            nk = lineHeight*((lines.length-1)*0.5 - i); // نق
+            rotateLen = 2*nk*Math.sin(toRadian(textRotate)/2);
+            rotateX = Math.sin(toRadian((180-textRotate)/2))*rotateLen;
+            rotateY = Math.cos(toRadian((180-textRotate)/2))*rotateLen;
+
             let line = lines[i].trim();
             let textWidth = ctx.measureText(line).width;
             let x = canvas.width / 2;
-            let y = canvas.height / 2 - ((lines.length - 1) * lineHeight / 2) + (lineHeight * i);
-            ctx.fillText(line, x + textRight, y + textTop);
-            ctxHigh.fillText(line, (x + textRight)*ratioHigh, (y + textTop)*ratioHigh);
+            let y = (canvas.height / 2) + (lineHeight * i) - center;
+            ctx.save();
+            ctx.translate(x + textRight + rotateX, y + textTop + rotateY);
+            ctx.rotate(textRotate * Math.PI / 180);
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(line, 0, 0);
+            ctx.restore();
+            ctxHigh.save();
+            ctxHigh.translate((x + textRight + rotateX) * ratioHigh, (y + textTop + rotateY) * ratioHigh);
+            ctxHigh.rotate(textRotate * Math.PI / 180);
+            ctxHigh.textAlign = "center";
+            ctxHigh.textBaseline = "middle";
+            ctxHigh.fillText(line, 0, 0);
+            ctxHigh.restore();
         }
 
         canvasHigh = document.getElementById("canvas-high-resolution");
