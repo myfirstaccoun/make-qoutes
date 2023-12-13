@@ -330,13 +330,14 @@
                 canvas.style.height = `${newHeight}px`;
 
                 ctx.drawImage(image, 0, 0);
-                ctx.font = fontSize + `px ${fontType}`;
+                ctx.font = fontSize*ratioHigh + `px ${fontType}`;
                 ctx.textAlign = "center";
                 ctx.textBaseline = "middle";
-
+                
                 ctxHigh.drawImage(imageHigh, 0, 0);
-                ratioHigh = canvasHigh.width/canvas.width;
-                ctxHigh.font = fontSize*ratioHigh + `px ${fontType}`;
+                ratioHigh = canvas.width/canvasHigh.width;
+                ctx.font = fontSize*ratioHigh + `px ${fontType}`;
+                ctxHigh.font = fontSize + `px ${fontType}`;
                 ctxHigh.textAlign = "center";
                 ctxHigh.textBaseline = "middle";
 
@@ -352,8 +353,8 @@
     // تغيير حجم النص
     fontSizeInput.addEventListener("input", function() {
         fontSize = parseInt(this.value);
-        ctx.font = fontSize + `px ${fontType}`;
-        ctxHigh.font = fontSize*ratioHigh + `px ${fontType}`;
+        ctx.font = fontSize*ratioHigh + `px ${fontType}`;
+        ctxHigh.font = fontSize + `px ${fontType}`;
         lineHeight = roundTo(fontSize*1.3, 10);
         lineHeightInput.value = lineHeight;
         updateText();
@@ -415,17 +416,17 @@
 
             let line = lines[i].trim();
             let textWidth = ctx.measureText(line).width;
-            let x = canvas.width / 2;
-            let y = (canvas.height / 2) + (lineHeight * i) - center;
+            let x = canvasHigh.width / 2;
+            let y = (canvasHigh.height / 2) + (lineHeight * i) - center;
             ctx.save();
-            ctx.translate(x + textRight + rotateX, y + textTop + rotateY);
+            ctx.translate((x + textRight + rotateX) * ratioHigh, (y + textTop + rotateY) * ratioHigh);
             ctx.rotate(textRotate * Math.PI / 180);
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
             ctx.fillText(line, 0, 0);
             ctx.restore();
             ctxHigh.save();
-            ctxHigh.translate((x + textRight + rotateX) * ratioHigh, (y + textTop + rotateY) * ratioHigh);
+            ctxHigh.translate(x + textRight + rotateX, y + textTop + rotateY);
             ctxHigh.rotate(textRotate * Math.PI / 180);
             ctxHigh.textAlign = "center";
             ctxHigh.textBaseline = "middle";
@@ -445,8 +446,8 @@
         let styles = document.querySelector("style#font-style");
         styles.innerText = '@import url("https://fonts.googleapis.com/css2?family=' + fontType + ':wght@' + fontBold + '&display=swap");';
 
-        ctx.font = fontSize + `px ${fontType}`;
-        ctxHigh.font = fontSize*ratioHigh + `px ${fontType}`;
+        ctx.font = fontSize*ratioHigh + `px ${fontType}`;
+        ctxHigh.font = fontSize + `px ${fontType}`;
         updateText();
     }
 
