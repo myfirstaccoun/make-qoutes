@@ -4,457 +4,76 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>الإقتباسات</title>
+
+    <link rel="stylesheet" href="./style.css">
+    <script defer src="./main.js"></script>
 </head>
-
 <body>
-<div id="editor">
-    
-    <label for="text">أضف الإقتباسات</label>
-    <textarea id="text" rows="4"></textarea>
-    
-    <div id="text-font-input" class="input">
-        <label>اكتب اسم <a href="https://fonts.google.com/?subset=arabic&noto.script=Arab" target="_blank">الخط</a></label>
-        <input type="text" id="text-font" value="Tajawal">
+    <div id="editor">
+        <label for="text">أضف الإقتباسات</label>
+        <textarea id="text" rows="4"></textarea>
+        
+        <div id="text-font-input" class="input">
+            <label>اكتب اسم <a href="https://fonts.google.com/?subset=arabic&noto.script=Arab" target="_blank">الخط</a></label>
+            <input type="text" id="text-font" value="Tajawal">
+        </div>
+        
+        <div id="font-bold-input" class="input">
+            <label>مدى غلظة الخط</label>
+            <input type="number" id="text-bold" value="700">
+        </div>
+
+        <label class="upload-label" for="file">ارفع القالب</label>
+        
+        <div id="canvas-container">
+            <img id="image" src="">
+            <canvas id="canvas"></canvas>
+        </div>
+
+        <div id="fontsize-input" class="input">
+            <label for="fontsize">حجم الخط</label>
+            <input type="number" id="fontsize" name="fontsize" value="60" min="1" max="200">
+        </div>
+
+        <div id="color-input" class="input">
+            <label for="text-color">لون الخط</label>
+            <input type="color" id="text-color" name="text-color" value="#000000">
+        </div>
+            
+        <div id="color-input-hex" class="input">
+            <span>#</span><input type="text" id="hex-color" maxlength="6" minlength="3" value="000000">
+        </div>
+
+        <div id="text-top-position-input" class="input">
+            <label>حرك للأعلى بمقدار</label>
+            <input type="number" id="text-top" value="0">
+        </div>
+
+        <div id="text-right-position-input" class="input">
+            <label>حرك لليمين بمقدار</label>
+            <input type="number" id="text-right" value="0">
+        </div>
+
+        <div id="text-rotate-input" class="input">
+            <label>درجة دوران الخط</label>
+            <input type="number" id="text-rotate" value="0" min="-180" max="180">
+        </div>
+
+        <div id="text-line-height-input" class="input">
+            <label>ارتفاع السطر</label>
+            <input type="number" id="line-height" value="0" min="0">
+        </div>
+
+        <input type="file" id="file">
+        <a id="submit" download="edited-image.png">تنزيل الإقتباس</a>
     </div>
-    
-    <div id="font-bold-input" class="input">
-        <label>مدى غلظة الخط</label>
-        <input type="number" id="text-bold" value="700">
+
+    <div class="high-container" style="display: none;">
+        <img id="image-high-resolution" src="">
+        <canvas id="canvas-high-resolution"></canvas>
     </div>
-
-    <label class="upload-label" for="file">ارفع القالب</label>
-    
-    <div id="canvas-container">
-        <img id="image" src="">
-        <canvas id="canvas"></canvas>
-    </div>
-
-    <div id="fontsize-input" class="input">
-        <label for="fontsize">حجم الخط</label>
-        <input type="number" id="fontsize" name="fontsize" value="60" min="1" max="200">
-    </div>
-
-    <div id="color-input" class="input">
-        <label for="text-color">لون الخط</label>
-        <input type="color" id="text-color" name="text-color" value="#000000">
-    </div>
-
-    <div id="text-top-position-input" class="input">
-        <label>حرك للأعلى بمقدار</label>
-        <input type="number" id="text-top" value="0">
-    </div>
-
-    <div id="text-right-position-input" class="input">
-        <label>حرك لليمين بمقدار</label>
-        <input type="number" id="text-right" value="0">
-    </div>
-
-    <div id="text-rotate-input" class="input">
-        <label>درجة دوران الخط</label>
-        <input type="number" id="text-rotate" value="0" min="-180" max="180">
-    </div>
-
-    <div id="text-line-height-input" class="input">
-        <label>ارتفاع السطر</label>
-        <input type="number" id="line-height" value="0" min="0">
-    </div>
-
-    <input type="file" id="file">
-    <a id="submit" download="edited-image.png">تنزيل الإقتباس</a>
-</div>
-
-
-<div class="high-container" style="display: none;">
-    <img id="image-high-resolution" src="">
-    <canvas id="canvas-high-resolution"></canvas>
-</div>
-
 </body>
-
-<style>
-    @import url("https://fonts.googleapis.com/css2?family=Tajawal:wght@700&display=swap");
-
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
-
-    body {
-        font-family: sans-serif;
-        background-color: #f3f3f3;
-    }
-
-    #editor {
-        max-width: 600px;
-        margin: 20px auto;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        background-color: #fff;
-        border-radius: 10px;
-        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-        padding: 30px;
-    }
-
-    .input {
-        margin: 5px 0;
-    }
-
-    label {
-        margin-bottom: 10px;
-        font-weight: bold;
-        text-align: center;
-        display: block;
-    }
-
-    #text {
-        font-size: 20px;
-        padding: 10px;
-        border: 2px solid #dcdbdb;
-        border-radius: 5px;
-        margin-bottom: 20px;
-        width: 100%;
-        resize: none;
-        font-family: "Tajawal", sans-serif;
-        direction: rtl;
-    }
-
-    #text:focus {
-        outline: none;
-        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-        border-color: #0088cc;
-    }
-
-    #file {
-        display: none;
-    }
-
-    .upload-label {
-        background-color: #ddd;
-        border-radius: 15px;
-        font-weight: bold;
-        cursor: pointer;
-        color: #000;
-        padding: 10px;
-        transition: background-color 0.2s ease-in-out;
-        margin: 10px 0;
-    }
-
-    .upload-label:hover {
-        background-color: #bbb;
-    }
-
-    .upload-label:active {
-        background-color: #aaa;
-    }
-
-    #image+.upload-label {
-        display: inline-block;
-    }
-
-    #submit {
-        background-color: #0088cc;
-        color: #fff;
-        padding: 10px 20px;
-        border-radius: 15px;
-        font-weight: bold;
-        cursor: pointer;
-        text-decoration: none;
-        transition: background-color 0.2s ease-in-out;
-        margin: 20px 0;
-    }
-
-    #submit:hover {
-        background-color: #006699;
-    }
-
-    #submit:active {
-        background-color: #005577;
-    }
-
-    #text-font-input, #font-bold-input {
-        margin-bottom: 10px;
-    }
-
-    #fontsize-input {
-        margin: 15px 0;
-    }
-
-    #fontsize-input label {
-        margin-right: 10px;
-    }
-
-    #fontsize-input input {
-        width: 130px;
-    }
-
-    #color-input {
-        margin-bottom: 20px;
-    }
-
-    #canvas-container {
-        max-width: 90%;
-        margin: 0 auto;
-        position: relative;
-    }
-
-    #canvas-container img {
-        display: block;
-        width: 100%;
-        height: auto;
-    }
-
-    #canvas-container canvas {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: auto;
-    }
-
-    .high-container {
-        position: relative;
-    }
-
-    .high-container canvas, .high-container img {
-        position: absolute;
-        top: 0;
-        right: 0;
-    }
-
-    @media (max-width: 630px) {
-        #editor {
-            position: absolute;
-            width: 95%;
-            top: 0px;
-            right: 2.5%;
-        }
-
-        #text {
-            font-size: 16px;
-            padding: 5px;
-        }
-
-        #submit {
-            font-size: 16px;
-        }
-    }
-
-    .rotate-text {
-        transform-origin: center bottom;
-    }
-</style>
-
 <style id="font-style">
     @import url("https://fonts.googleapis.com/css2?family=Tajawal:wght@700&display=swap");
 </style>
-
-<script>
-    function toRadian(degree) {
-        return degree*Math.PI/180;
-    }
-
-    function roundTo(num, toNum=10) {// num=13.2345, toNum=10 ==> 13.2
-        return Math.round(num*toNum)/toNum;
-    }
-
-    let editor = document.querySelector("#editor");
-    let image = document.getElementById("image");
-    let imageHigh = document.getElementById("image-high-resolution");
-    let textInput = document.getElementById("text");
-    let fileInput = document.getElementById("file");
-    let submitButton = document.getElementById("submit");
-    let canvas = document.getElementById("canvas");
-    let canvasHigh = document.getElementById("canvas-high-resolution");
-    let ctx = canvas.getContext("2d");
-    let ctxHigh = canvasHigh.getContext("2d");
-    // نوع الخط
-    let fontType = "Tajawal";
-    let fontBold = 300;
-    let fontTypeInput = document.getElementById("text-font");
-    let fontBoldInput = document.getElementById("text-bold");
-    // حجم الخط
-    let fontSize = 60;
-    let fontSizeInput = document.getElementById("fontsize");
-    let lineHeight = fontSize * 1.3; // ارتفاع السطر
-    let lineHeightInput = document.getElementById("line-height");
-    // مكان النص
-    let textTopInput = document.getElementById("text-top");
-    let textRightInput = document.getElementById("text-right");
-    let textRotateInput = document.getElementById("text-rotate");
-    let textTop = 0;
-    let textRight = 0;
-    // دوران النص
-    let textRotate = 0;
-    let nk = 0; // نق
-    let rotateLen = 0;
-    let rotateX = 0;
-    let rotateY = 0;
-    // لون النص
-    let textColorInput = document.getElementById("text-color");
-    // النسبة بين الصورة الأصلية والمعروضة
-    let ratioHigh = 1;
-
-    window.onload = () => {
-        fontSizeInput.value = fontSize;
-        ctx.fillStyle = textColorInput.value;
-        updateFont();
-        updateText();
-    }
-
-    // تغيير نوع الخط
-    fontTypeInput.addEventListener("textInput", updateFont);
-    fontTypeInput.addEventListener("input", updateFont);
-    fontBoldInput.addEventListener("textInput", updateFont);
-    fontBoldInput.addEventListener("input", updateFont);
-
-    // رفع القالب واظهاره
-    fileInput.addEventListener("change", function() {
-        let file = this.files[0];
-        let reader = new FileReader();
-        reader.onload = function(event) {
-            image.src = event.target.result;
-            imageHigh.src = event.target.result;
-
-            let waitSize = setInterval(() => { if(image.width > 0 && image.height > 0) {
-                canvas.width = image.width;
-                canvas.height = image.height;
-                canvasHigh.width = imageHigh.width;
-                canvasHigh.height = imageHigh.height;
-
-                containerWidth = document.getElementById("canvas-container").offsetWidth;
-                let newHeight = containerWidth * image.height/image.width;
-
-                canvas.style.height = `${newHeight}px`;
-
-                ctx.drawImage(image, 0, 0);
-                ctx.font = fontSize*ratioHigh + `px ${fontType}`;
-                ctx.textAlign = "center";
-                ctx.textBaseline = "middle";
-                
-                ctxHigh.drawImage(imageHigh, 0, 0);
-                ratioHigh = canvas.width/canvasHigh.width;
-                ctx.font = fontSize*ratioHigh + `px ${fontType}`;
-                ctxHigh.font = fontSize + `px ${fontType}`;
-                ctxHigh.textAlign = "center";
-                ctxHigh.textBaseline = "middle";
-
-                lineHeightInput.value = roundTo(fontSize*1.3, 10);
-
-                updateText();
-                clearInterval(waitSize);
-            }});
-        }
-        reader.readAsDataURL(file);
-    });
-
-    // تغيير حجم النص
-    fontSizeInput.addEventListener("input", function() {
-        fontSize = parseInt(this.value);
-        ctx.font = fontSize*ratioHigh + `px ${fontType}`;
-        ctxHigh.font = fontSize + `px ${fontType}`;
-        lineHeight = roundTo(fontSize*1.3, 10);
-        lineHeightInput.value = lineHeight;
-        updateText();
-    });
-    
-    // تغيير ارتفاع السطر
-    lineHeightInput.addEventListener("input", function() {
-        lineHeight = parseInt(lineHeightInput.value);
-        updateText();
-    });
-
-    // تغيير لون النص
-    textColorInput.addEventListener("input", function() {
-        updateText();
-    });
-
-    // تغيير مكان النص
-    textTopInput.addEventListener("input", function() {
-        textTop = -1 * parseInt(this.value);
-        updateText();
-    });
-
-    textRightInput.addEventListener("input", function() {
-        textRight = parseInt(this.value);
-        updateText();
-    });
-
-    // تغيير زاوية دوران النص
-    textRotateInput.addEventListener("input", function() {
-        textRotate = parseInt(this.value);
-        updateText();
-    });
-
-    // تغيير النص على القالب
-    textInput.addEventListener("textInput", updateText);
-    textInput.addEventListener("input", updateText);
-
-    // دالة تغيير النص على القالب وتغيير لون النص
-    function updateText() {
-        let lines = textInput.value.split("\n").filter((line) => {
-            return line.trim() !== '';
-        });
-        ctx.fillStyle = textColorInput.value; // اللون
-        ctxHigh.fillStyle = textColorInput.value; // اللون
-        
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctxHigh.clearRect(0, 0, canvasHigh.width, canvasHigh.height);
-
-        canvas.width == 0? ctx.drawImage(image, 0, 0) : ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-        ctxHigh.drawImage(imageHigh, 0, 0);
-        
-        let center = (lines.length - 1) * lineHeight / 2;
-
-        for (let i = 0; i < lines.length; i++) {
-            nk = lineHeight*((lines.length-1)*0.5 - i); // نق
-            rotateLen = 2*nk*Math.sin(toRadian(textRotate)/2);
-            rotateX = Math.sin(toRadian((180-textRotate)/2))*rotateLen;
-            rotateY = Math.cos(toRadian((180-textRotate)/2))*rotateLen;
-
-            let line = lines[i].trim();
-            let textWidth = ctx.measureText(line).width;
-            let x = canvasHigh.width / 2;
-            let y = (canvasHigh.height / 2) + (lineHeight * i) - center;
-            ctx.save();
-            ctx.translate((x + textRight + rotateX) * ratioHigh, (y + textTop + rotateY) * ratioHigh);
-            ctx.rotate(textRotate * Math.PI / 180);
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-            ctx.fillText(line, 0, 0);
-            ctx.restore();
-            ctxHigh.save();
-            ctxHigh.translate(x + textRight + rotateX, y + textTop + rotateY);
-            ctxHigh.rotate(textRotate * Math.PI / 180);
-            ctxHigh.textAlign = "center";
-            ctxHigh.textBaseline = "middle";
-            ctxHigh.fillText(line, 0, 0);
-            ctxHigh.restore();
-        }
-
-        canvasHigh = document.getElementById("canvas-high-resolution");
-        let dataURL = canvasHigh.toDataURL("image/png");
-        submitButton.href = dataURL;
-    }
-
-    // دالة تغيير نوع الخط
-    function updateFont() {
-        fontType = fontTypeInput.value;
-        fontBold = fontBoldInput.value;
-        let styles = document.querySelector("style#font-style");
-        styles.innerText = '@import url("https://fonts.googleapis.com/css2?family=' + fontType + ':wght@' + fontBold + '&display=swap");';
-
-        ctx.font = fontSize*ratioHigh + `px ${fontType}`;
-        ctxHigh.font = fontSize + `px ${fontType}`;
-        updateText();
-    }
-
-    // تنزيل الإقتباس
-    submitButton.onclick = () => {
-        submitButton.setAttribute("download", `${textInput.value.split("\n").join(" ")}.png`);
-    };
-
-</script>
 </html>
