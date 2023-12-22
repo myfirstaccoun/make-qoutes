@@ -1,0 +1,173 @@
+@import url("https://fonts.googleapis.com/css2?family=Tajawal:wght@700&display=swap");
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: sans-serif;
+    background-color: #f3f3f3;
+}
+
+#editor {
+    max-width: 600px;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+    padding: 30px;
+}
+
+.input {
+    margin: 5px 0;
+}
+
+label {
+    margin-bottom: 10px;
+    font-weight: bold;
+    text-align: center;
+    display: block;
+}
+
+#text {
+    font-size: 20px;
+    padding: 10px;
+    border: 2px solid #dcdbdb;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    width: 100%;
+    resize: none;
+    font-family: "Tajawal", sans-serif;
+    direction: rtl;
+}
+
+#text:focus {
+    outline: none;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+    border-color: #0088cc;
+}
+
+#file {
+    display: none;
+}
+
+.upload-label {
+    background-color: #ddd;
+    border-radius: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #000;
+    padding: 10px;
+    transition: background-color 0.2s ease-in-out;
+    margin: 10px 0;
+}
+
+.upload-label:hover {
+    background-color: #bbb;
+}
+
+.upload-label:active {
+    background-color: #aaa;
+}
+
+#image+.upload-label {
+    display: inline-block;
+}
+
+#submit {
+    background-color: #0088cc;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.2s ease-in-out;
+    margin: 20px 0;
+}
+
+#submit:hover {
+    background-color: #006699;
+}
+
+#submit:active {
+    background-color: #005577;
+}
+
+#text-font-input, #font-bold-input {
+    margin-bottom: 10px;
+}
+
+#fontsize-input {
+    margin: 15px 0;
+}
+
+#fontsize-input label {
+    margin-right: 10px;
+}
+
+#fontsize-input input {
+    width: 130px;
+}
+
+#color-input-hex {
+    margin-bottom: 20px;
+}
+
+#canvas-container {
+    max-width: 90%;
+    margin: 0 auto;
+    position: relative;
+}
+
+#canvas-container img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+#canvas-container canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+}
+
+.high-container {
+    position: relative;
+}
+
+.high-container canvas, .high-container img {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+@media (max-width: 630px) {
+    #editor {
+        position: absolute;
+        width: 95%;
+        top: 0px;
+        right: 2.5%;
+    }
+
+    #text {
+        font-size: 16px;
+        padding: 5px;
+    }
+
+    #submit {
+        font-size: 16px;
+    }
+}
+
+.rotate-text {
+    transform-origin: center bottom;
+}
