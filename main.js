@@ -12,6 +12,7 @@ let imageHigh = document.getElementById("image-high-resolution");
 let textInput = document.getElementById("text");
 let fileInput = document.getElementById("file");
 let submitButton = document.getElementById("submit");
+let enable_developer = document.querySelector(".enable-developer");
 let canvas = document.getElementById("canvas");
 let canvasHigh = document.getElementById("canvas-high-resolution");
 let ctx = canvas.getContext("2d");
@@ -148,9 +149,8 @@ textInput.addEventListener("input", updateText);
 
 // دالة تغيير النص على القالب وتغيير لون النص
 function updateText() {
-    let lines = textInput.value.split("\n").filter((line) => {
-        return line.trim() !== '';
-    });
+    let lines = textInput.value.split("\n");
+    
     ctx.fillStyle = textColorInput.value; // اللون
     ctxHigh.fillStyle = textColorInput.value; // اللون
     if(isHexInputting == 0) {
@@ -201,7 +201,7 @@ function updateText() {
 
 // دالة تغيير نوع الخط
 function updateFont() {
-    fontType = fontTypeInput.value;
+    fontType = fontTypeInput.value.split(" ").join("+");
     fontBold = fontBoldInput.value;
     let styles = document.querySelector("style#font-style");
     styles.innerText = '@import url("https://fonts.googleapis.com/css2?family=' + fontType + ':wght@' + fontBold + '&display=swap");';
@@ -215,3 +215,11 @@ function updateFont() {
 submitButton.onclick = () => {
     submitButton.setAttribute("download", `${textInput.value.split("\n").join(" ")}.png`);
 };
+
+// تفعيل خيار المطوِّر
+enable_developer.onclick = () => {
+    let script = document.createElement('script');
+    script.src="//cdn.jsdelivr.net/npm/eruda";
+    document.body.appendChild(script);
+    script.onload = function () { eruda.init() }
+}
