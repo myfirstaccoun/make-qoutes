@@ -80,7 +80,7 @@ label {
     display: inline-block;
 }
 
-#submit {
+#submit, .enable-developer {
     background-color: #0088cc;
     color: #fff;
     padding: 10px 20px;
@@ -90,6 +90,11 @@ label {
     text-decoration: none;
     transition: background-color 0.2s ease-in-out;
     margin: 20px 0;
+}
+
+.enable-developer {
+    background-color: red;
+    margin-top: 0;
 }
 
 #submit:hover {
