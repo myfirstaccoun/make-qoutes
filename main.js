@@ -1,3 +1,13 @@
+function copyText(txt) {// نسخ النص
+    let inputElement = document.createElement("textarea");
+    inputElement.type = "text";
+    inputElement.value = txt;
+    document.body.appendChild(inputElement);
+    inputElement.select();
+    document.execCommand('copy');
+    document.body.removeChild(inputElement);
+}
+
 function toRadian(degree) {
     return degree*Math.PI/180;
 }
@@ -222,4 +232,5 @@ enable_developer.onclick = () => {
     script.src="//cdn.jsdelivr.net/npm/eruda";
     document.body.appendChild(script);
     script.onload = function () { eruda.init() }
+    copyText(`let newNames = \`أحمد\nمحمد\nعمر\nباقي الأسامي\`.split("\\n");\n\nlet i = 0;\nfunction addName() {\n	document.querySelector("#text").value = newNames[i];\n\n	// حفظ في الخادم\n	let inputEvent = new Event('input', { bubbles: true });\n	document.querySelector("#text").dispatchEvent(inputEvent);\n	\n	i++;\n	setTimeout(() => {\n		document.querySelector("#submit").click();\n		i < newNames.length? addName() : "";\n	}, 100);\n}\n\naddName();`);
 }
