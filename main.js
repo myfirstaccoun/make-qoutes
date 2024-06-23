@@ -139,7 +139,6 @@ fileInput.addEventListener("change", function() {
             canvas.style.height = `${newHeight}px`;
 
             ctx.drawImage(image, 0, 0);
-            ctx.font = texts_data[active_text].font_size*ratioHigh + `px ${texts_data[active_text].font_type}`;
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
             
@@ -162,8 +161,6 @@ fileInput.addEventListener("change", function() {
 // تغيير حجم النص
 fontSizeInput.addEventListener("input", function() {
     texts_data[active_text].font_size = parseInt(this.value);
-    ctx.font = texts_data[active_text].font_size*ratioHigh + `px ${texts_data[active_text].font_type}`;
-    ctxHigh.font = texts_data[active_text].font_size + `px ${texts_data[active_text].font_type}`;
     texts_data[active_text].line_height = roundTo(texts_data[active_text].font_size*1.3, 10);
     lineHeightInput.value = texts_data[active_text].line_height;
     updateText();
@@ -309,10 +306,14 @@ textInput.addEventListener("textInput", updateText);
 textInput.addEventListener("input", updateText);
 
 // كتابة نص واحد فقط
-function writeText(text, font_color, lineHeight, textTop, textRight, textRotate) {
+function writeText(text, font_type, font_size, font_color, lineHeight, textTop, textRight, textRotate) {
     // اللون
     ctx.fillStyle = font_color;
     ctxHigh.fillStyle = font_color;
+
+    // حجم الخط
+    ctx.font = font_size*ratioHigh + `px ${font_type}`;
+    ctxHigh.font = font_size + `px ${font_type}`;
 
     // تعديلات
     textTop *= -1;
@@ -377,7 +378,7 @@ function updateText() {
         let text_item = texts_data[i];
 
         // اكتب الكلام
-        writeText(text_item.text, text_item.font_color, text_item.line_height, text_item.text_to_top, text_item.text_to_right, text_item.text_rotation);
+        writeText(text_item.text, text_item.font_type, text_item.font_size, text_item.font_color, text_item.line_height, text_item.text_to_top, text_item.text_to_right, text_item.text_rotation);
     }
 
     // تفعيل تنزيل الإقتباس
@@ -396,8 +397,6 @@ function updateFont() {
     texts_data[active_text].font_type = fontType;
     texts_data[active_text].font_bold = fontBold;
 
-    ctx.font = fontSize*ratioHigh + `px ${fontType}`;
-    ctxHigh.font = fontSize + `px ${fontType}`;
     updateText();
 }
 
