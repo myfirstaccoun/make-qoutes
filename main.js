@@ -262,10 +262,21 @@ itemsCont.onclick = (eo) => {
 
     // إلغاء نص
     if(eo.target.tagName.toLowerCase() == "img") {
+        console.log(active_text);
         item_index = Array.from(itemsCont.querySelectorAll(".item")).indexOf(eo.target.parentNode);
         items[item_index].remove();
         texts_data = removeFromArr(texts_data, item_index);
-        active_text = Array.from(itemsCont.querySelectorAll(".item")).length - 1;
+        
+        // إلغاء تفعيل النص السابق
+        let active_item_index = Array.from(itemsCont.querySelectorAll(".item")).indexOf(itemsCont.querySelector(".item.active"));
+        itemsCont.querySelectorAll(".item")[active_item_index].classList.remove("active");
+        check_hasImage(active_item_index)? itemsCont.querySelectorAll(".item")[active_item_index].querySelector("img").setAttribute("src", "./صور/إلغاء.png") : "";
+        
+        // لو الزرار الفعال آخر واحد
+        if(active_text >= items.length - 1) {
+            console.log(item_index, items.length, 2222222222222222);
+            active_text = Array.from(itemsCont.querySelectorAll(".item")).length - 1;
+        }
 
         // تغيير الخصائص
         changeProperties();
