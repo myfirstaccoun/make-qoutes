@@ -22,6 +22,7 @@ body {
     border-radius: 10px;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
     padding: 30px;
+    /* padding-top: 3px; */
 }
 
 /* إضافة أكثر من نص */
@@ -100,6 +101,133 @@ body {
     width: 100%;
     text-align: center;
     color: #fff;
+}
+
+/* أزرار الإختيار */
+.fast-method {
+    width: 100%;
+    margin-bottom: 15px !important;
+}
+
+.fast-method .choose-div a:not(:has(img)) {
+    width: 50%;
+    padding: 0;
+    padding-top: 3px;
+}
+
+.text-anchor .start {
+    padding-left: 7px;
+}
+
+.text-anchor .start.active {
+    padding-left: 9px;
+}
+
+.text-anchor .end.active {
+    padding-right: 2px;
+}
+
+.text-align img {
+    position: relative;
+    top: 5px;
+    left: 5px;
+    width: 20px;
+    user-select: none;
+}
+
+.text-align .choose-div .start, .text-align .choose-div .end {
+    width: 37px;
+}
+
+.text-align .choose-div .start img {
+    left: 7px;
+}
+
+.choose-div .start.active {
+    z-index: 1000;
+}
+
+.choose-div a:not(:has(img)) {
+    text-align: center;
+    font-weight: 700;
+    width: 63px;
+    padding-bottom: 5px;
+}
+
+.text-align .choose-div .end:not(.active) {
+    padding-left: 2px;
+}
+
+.text-dir, .text-anchor .choose-div {
+    margin-top: 10px !important;
+    user-select: none;
+}
+
+
+
+.text-dir .start {
+    padding-left: 5px;
+}
+
+.text-dir .start:not(.active) {
+    padding-right: 2px;
+}
+
+.text-dir .end {
+    padding-right: 5px;
+}
+
+
+.text-dir .end:not(.active) {
+    padding-left: 2px;
+}
+
+.choose-div {
+    display: flex;
+}
+
+.choose-div a {
+    display: inline-block;
+    min-width: 35px;
+    min-height: 35px;
+    border: 2px solid #000;
+    cursor: pointer;
+}
+
+.choose-div .start {
+    border-radius: 500px 0px 0px 500px;
+    border-right: 0px;
+}
+
+.choose-div .mid {
+    position: relative;
+    right: 2px;
+    border-radius: 0px 0px 0px 0px;
+}
+
+.choose-div:has(.mid) .end {
+    position: relative;
+    right: 4px;
+}
+
+.choose-div:not(:has(.mid)) .end {
+    position: relative;
+    right: 2px;
+}
+
+.choose-div .end {
+    border-radius: 0px 500px 500px 0px;
+    border-left: 0px;
+}
+
+.choose-div .active {
+    border-color: #0096e0;
+    background-color: #bce9ff;
+}
+
+.choose-div .active {
+    border-right: 2px solid #0096e0 !important;
+    border-left: 2px solid #0096e0 !important;
 }
 
 /* المدخلات */
@@ -188,6 +316,7 @@ label {
     max-width: 90%;
     margin: 0 auto;
     position: relative;
+    margin-bottom: 10px;
 }
 
 #canvas-container img {
