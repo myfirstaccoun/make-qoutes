@@ -10,6 +10,14 @@
 </head>
 <body>
     <div id="editor">
+        <!-- <div class="fast-method input">
+            <label>وضع تسريع</label>
+            <div class="choose-div" >
+                <a class="start active">التعديل</a>
+                <a class="end">التنزيل</a>
+            </div>
+        </div> -->
+
         <div id="items">
             <div class="item active">
                 <p class="item-text"></p>
@@ -36,7 +44,48 @@
         
         <div id="canvas-container">
             <img id="image" src="">
-            <canvas id="canvas"></canvas>
+            <canvas dir="rtl" id="canvas"></canvas>
+        </div>
+        
+        <div class="text-anchor anchor-ud input">
+            <label>مركز النص رأسيًا</label>
+            <div class="choose-div">
+                <a class="start">من<br>الأسفل</a>
+                <a class="mid active">من<br>الوسط</a>
+                <a class="end">من<br>الأعلى</a>
+            </div>
+        </div>
+
+        <div class="text-anchor anchor-rl input">
+            <label>مركز النص أفقيًا</label>
+            <div class="choose-div">
+                <a class="start">من<br>اليسار</a>
+                <a class="mid active">من<br>الوسط</a>
+                <a class="end">من<br>اليمين</a>
+            </div>
+        </div>
+
+        <div class="text-align input">
+            <label>محاذاة النص</label>
+            <div class="choose-div">
+                <a class="start">
+                    <img src="./صور/محاذاة يسار.png">
+                </a>
+                <a class="mid">
+                    <img src="./صور/محاذاة وسط.png">
+                </a>
+                <a class="end active">
+                    <img src="./صور/محاذاة يمين.png">
+                </a>
+            </div>
+        </div>
+
+        <div class="text-dir input">
+            <label>اتجاه الكلام</label>
+            <div class="choose-div">
+                <a class="start">من<br>اليسار</a>
+                <a class="end active">من<br>اليمين</a>
+            </div>
         </div>
 
         <div id="fontsize-input" class="input">
@@ -65,7 +114,7 @@
 
         <div id="text-rotate-input" class="input">
             <label>درجة دوران الخط</label>
-            <input type="number" id="text-rotate" value="0" min="-180" max="180">
+            <input type="number" id="text-rotate" value="0">
         </div>
 
         <div id="text-line-height-input" class="input">
@@ -80,7 +129,7 @@
 
     <div class="high-container" style="display: none;">
         <img id="image-high-resolution" src="">
-        <canvas id="canvas-high-resolution"></canvas>
+        <canvas dir="ltr" id="canvas-high-resolution"></canvas>
     </div>
 </body>
 <style id="font-style">
