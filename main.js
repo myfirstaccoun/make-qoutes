@@ -556,8 +556,6 @@ function writeText(all_canvas, the_canvas_, the_ctx, text, font_type, font_size,
 
 // تغيير النص - أكثر من نص
 function updateText(edit_low_canvas = true, edit_high_canvas = true, make_dataURL = true) {
-    console.log(edit_low_canvas, edit_high_canvas, make_dataURL);
-
     let text = textInput_.value;
     let lines = text.split("\n");
     texts_data[active_text].text = text;
