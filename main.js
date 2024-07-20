@@ -100,6 +100,20 @@ function choose_fast_method() {
     fastMethod == "download"? updateText(true, true, true) : (fastMethod == "edit"? updateText(true, false, false) : "");
 }
 
+function rgbToHex(color) {
+    let r = color[0];
+    let g = color[1];
+    let b = color[2];
+
+    // تحويل كل قيمة من القيم الثلاثية إلى صيغة HEX
+    let red = r.toString(16).padStart(2, '0').toUpperCase();
+    let green = g.toString(16).padStart(2, '0').toUpperCase();
+    let blue = b.toString(16).padStart(2, '0').toUpperCase();
+  
+    // دمج القيم الثلاثية مع إضافة رمز #
+    return `#${red}${green}${blue}`;
+}
+
 let editor_ = document.querySelector("#editor");
 let image_ = document.getElementById("image");
 let imageHigh_ = document.getElementById("image-high-resolution");
@@ -178,6 +192,21 @@ window.onload = () => {
     updateFont();
 }
 
+// اختيار لون من الصورة
+canvas_.onclick = (eo) => {
+    let x = eo.layerX;
+    let y = eo.layerY;
+    let data = ctx.getImageData(0, 0, image_.width, image_.height).data;
+    let cell_num = (x + y*image_.width)*4 + 3;
+    let rgb = [data[cell_num-3], data[cell_num-2], data[cell_num-1]];
+    let hex = rgbToHex(rgb);
+
+    textColorInput_.value = hex;
+    hexColorInput_.value = hex.replace("#", "");
+    texts_data[active_text].font_color = hex;
+    choose_fast_method();
+}
+
 // وضع التسريع
 fastMethod_.onclick = (eo) => {
     let target = eo.target;
@@ -190,7 +219,7 @@ fastMethod_.onclick = (eo) => {
         fastMethod_.querySelector(".active").classList.remove("active");
         target.classList.add("active");
         
-        // textInput_.focus();
+        textInput_.focus();
     }
 }
 
@@ -208,7 +237,7 @@ anchorUD_.onclick = (eo) => {
         anchorUD_.querySelector(".active").classList.remove("active");
         target.classList.add("active");
         
-        // textInput_.focus();
+        textInput_.focus();
         choose_fast_method();
     }
 }
@@ -226,7 +255,7 @@ anchorRL_.onclick = (eo) => {
         anchorRL_.querySelector(".active").classList.remove("active");
         target.classList.add("active");
         
-        // textInput_.focus();
+        textInput_.focus();
         choose_fast_method();
     }
 }
@@ -245,7 +274,7 @@ textAlign_.onclick = (eo) => {
         textAlign_.querySelector(".active").classList.remove("active");
         target.classList.add("active");
         
-        // textInput_.focus();
+        textInput_.focus();
         choose_fast_method();
     }
 }
@@ -262,7 +291,7 @@ textDir_.onclick = (eo) => {
         eo.target.classList.add("active");
         
         choose_fast_method();
-        // textInput_.focus();
+        textInput_.focus();
     }
 }
 
@@ -451,9 +480,6 @@ itemsCont_.onclick = (eo) => {
 // تغيير النص على القالب
 textInput_.addEventListener("textInput", choose_fast_method);
 textInput_.addEventListener("input", choose_fast_method);
-
-// textInput_.addEventListener("textInput", (fastMethod == "download"? updateText(true, true, true) : (fastMethod == "edit"? updateText(true, false, false) : "")));
-// textInput_.addEventListener("input", (fastMethod == "download"? updateText(true, true, true) : (fastMethod == "edit"? updateText(true, false, false) : "")));
 
 // كتابة نص واحد فقط
 function writeText(all_canvas, the_canvas_, the_ctx, text, font_type, font_size, font_color, lineHeight, textTop, textRight, textRotate, textAlign, textDirection, anchorUD, anchorRL) {
