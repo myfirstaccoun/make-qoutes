@@ -166,6 +166,10 @@ let hexColorInput_ = document.getElementById("hex-color");
 let isHexInputting = 0;
 // النسبة بين الصورة الأصلية والمعروضة
 let ratioHigh = 1;
+// شريط تقدم تنزيل أكثر من نص
+let progress_popup = document.querySelector("#progress-popup");
+let progress_bar = progress_popup.querySelector("#progress-bar");
+let progress_p = progress_popup.querySelector("p");
 
 // أكثر من نص
 let default_text_info = {
@@ -581,14 +585,16 @@ function writeText(all_canvas, the_canvas_, the_ctx, text, font_type, font_size,
 }
 
 // تغيير النص - أكثر من نص
-function updateText(edit_low_canvas = true, edit_high_canvas = true, make_dataURL = true) {
+function updateText(edit_low_canvas = true, edit_high_canvas = true, make_dataURL = true, fast_download = false, other_text = null) {
     let text = textInput_.value;
     let lines = text.split("\n");
-    texts_data[active_text].text = text;
-
-    // وضع النص في مربع النصوص اللي فوق الموقع
-    document.querySelectorAll("#items .item")[active_text].querySelector(".item-text").innerText = lines.join(" ");
+    other_text == null? texts_data[active_text].text = text : texts_data[active_text].text = other_text;
     
+    // وضع النص في مربع النصوص اللي فوق الموقع
+    if(fast_download == false) {
+        document.querySelectorAll("#items .item")[active_text].querySelector(".item-text").innerText = lines.join(" ");
+    }
+
     // مسح الصورة
     edit_low_canvas == true? ctx.clearRect(0, 0, canvas_.width, canvas_.height) : "";
     edit_high_canvas == true? ctxHigh.clearRect(0, 0, canvasHigh_.width, canvasHigh_.height) : "";
@@ -598,11 +604,13 @@ function updateText(edit_low_canvas = true, edit_high_canvas = true, make_dataUR
     edit_high_canvas == true? ctxHigh.drawImage(imageHigh_, 0, 0) : "";
 
     // تغيير قيمة مدخل اللون
-    if(isHexInputting == 0) {
-        hexColorInput_.value = textColorInput_.value.replace("#", "").toUpperCase();
-    } else {
-        hexColorInput_.value = hexColorInput_.value.toUpperCase();
-        isHexInputting = 0;
+    if(fast_download == false) {
+        if(isHexInputting == 0) {
+            hexColorInput_.value = textColorInput_.value.replace("#", "").toUpperCase();
+        } else {
+            hexColorInput_.value = hexColorInput_.value.toUpperCase();
+            isHexInputting = 0;
+        }
     }
 
     // كتابة النصوص
@@ -645,6 +653,36 @@ function updateFont() {
     choose_fast_method();
 }
 
+function make_photos(texts) {
+    progress_popup.style.display = "";
+    progress_bar.style.width = "0%";
+    progress_p.innerText = `0/${texts.length} (0%)`;
+    setTimeout(() => {
+        const zip = new JSZip();
+        
+        texts.forEach((text, index) => {
+            updateText(edit_low_canvas = false, edit_high_canvas = true, make_dataURL = false, fast_download = true, other_text = text);
+
+            canvasHigh_.toBlob(function(blob) {
+                zip.file(`${text.trim()}.png`, blob);
+                let percent = Math.floor((index+1)*100/texts.length);
+                progress_bar.style.width = `${percent}%`;
+                progress_p.innerText = `${index+1}/${texts.length} (${percent}%)`;
+                
+                if (index === texts.length - 1) {
+                    setTimeout(() => {
+                        progress_popup.style.display = "none";
+                    }, 500);
+
+                    zip.generateAsync({ type: 'blob' }).then(function(content) {
+                        saveAs(content, 'الصور.zip');
+                    });
+                }
+            });
+        });
+    }, 100);
+}
+
 // تنزيل الإقتباس
 submitButton_.onclick = () => {
     fastMethod == "edit"? updateText(false, true, true) : "";
@@ -658,5 +696,5 @@ enable_developer_.onclick = () => {
     script_.src="//cdn.jsdelivr.net/npm/eruda";
     document.body.appendChild(script_);
     script_.onload = function () { eruda.init() }
-    copyText(`let newNames = \`أحمد\nمحمد\nعمر\nباقي الأسامي\`.split("\\n");\n\nlet i = 0;\nfunction addName() {\n	document.querySelector("#text").value = newNames[i];\n\n	// حفظ في الخادم\n	let inputEvent = new Event('input', { bubbles: true });\n	document.querySelector("#text").dispatchEvent(inputEvent);\n	\n	i++;\n	setTimeout(() => {\n		document.querySelector("#submit").click();\n		i < newNames.length? addName() : "";\n	}, 100);\n}\n\naddName();`);
+    copyText(`make_photos(\`أحمد\nمحمد\nعمر\nباقي الأسامي\`.split("\\n"))`);
 }
