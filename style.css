@@ -163,8 +163,6 @@ body {
     user-select: none;
 }
 
-
-
 .text-dir .start {
     padding-left: 5px;
 }
@@ -176,7 +174,6 @@ body {
 .text-dir .end {
     padding-right: 5px;
 }
-
 
 .text-dir .end:not(.active) {
     padding-left: 2px;
@@ -390,4 +387,37 @@ label {
     #submit {
         font-size: 16px;
     }
+}
+
+#progress-bar-container {
+    width: 100%;
+    background-color: #e0e0e0;
+    border-radius: 25px;
+    margin: 20px 0;
+}
+
+#progress-bar {
+    width: 50%; /* Example width */
+    height: 20px;
+    background: linear-gradient(to right, purple, blue);
+    border-radius: 25px;
+}
+
+#progress-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 1);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    z-index: 10000000000;
+
+    max-width: 600px;
+    width: 95%;
+}
+
+#progress-popup p {
+    text-align: center;
 }
