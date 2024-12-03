@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>الإقتباسات</title>
 
+    <!-- إضافة مكتبة JSZip -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.6.0/jszip.min.js"></script>
+    
+    <!-- إضافة مكتبة FileSaver.js -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
     <link rel="stylesheet" href="./style.css">
     <script defer src="./main.js"></script>
 </head>
@@ -125,6 +131,14 @@
         <input type="file" id="file">
         <a id="submit" download="edited-image.png">تنزيل الإقتباس</a>
         <a class="enable-developer">تفعيل خيار المطوِّر</a>
+        
+    </div>
+
+    <div id="progress-popup" style="display: none;" dir="rtl">
+        <div id="progress-bar-container">
+            <div id="progress-bar"></div>
+        </div>
+        <p>40/80 (50%)</p>
     </div>
 
     <div class="high-container" style="display: none;">
