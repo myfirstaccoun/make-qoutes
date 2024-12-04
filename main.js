@@ -37,6 +37,10 @@ function copyText(txt) {// نسخ النص
     document.body.removeChild(inputElement);
 }
 
+function تقسيم_النص_حسب(النص, تقسيم_حسب) {
+    return النص.split(تقسيم_حسب);
+}
+
 function toRadian(degree) {
     return degree*Math.PI/180;
 }
@@ -653,7 +657,7 @@ function updateFont() {
     choose_fast_method();
 }
 
-function make_photos(texts) {
+function أكثر_من_نص(texts, إسم_الملف = "الصور") {
     progress_popup.style.display = "";
     progress_bar.style.width = "0%";
     progress_p.innerText = `0/${texts.length} (0%)`;
@@ -675,7 +679,7 @@ function make_photos(texts) {
                     }, 500);
 
                     zip.generateAsync({ type: 'blob' }).then(function(content) {
-                        saveAs(content, 'الصور.zip');
+                        saveAs(content, `${إسم_الملف}.zip`);
                     });
                 }
             });
@@ -696,5 +700,5 @@ enable_developer_.onclick = () => {
     script_.src="//cdn.jsdelivr.net/npm/eruda";
     document.body.appendChild(script_);
     script_.onload = function () { eruda.init() }
-    copyText(`make_photos(\`أحمد\nمحمد\nعمر\nباقي الأسامي\`.split("\\n"))`);
+    copyText(`أكثر_من_نص(\nتقسيم_النص_حسب(\n\n\`أحمد\nمحمد\nعمر\nباقي الأسامي\`,\n\nتقسيم_حسب="\\n"),\nإسم_الملف = "الصور")`);
 }
