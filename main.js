@@ -673,13 +673,23 @@ function أكثر_من_نص(texts, إسم_الملف = "الصور") {
                 progress_bar.style.width = `${percent}%`;
                 progress_p.innerText = `${index+1}/${texts.length} (${percent}%)`;
                 
+                // الملف النهائي
                 if (index === texts.length - 1) {
-                    setTimeout(() => {
-                        progress_popup.style.display = "none";
-                    }, 500);
-
-                    zip.generateAsync({ type: 'blob' }).then(function(content) {
+                    zip.generateAsync(
+                        { type: 'blob' }, 
+                        (metadata) => {
+                            // تحديث شريط التقدم بناءً على النسبة
+                            let progress = Math.floor(metadata.percent);
+                            progress_bar.style.width = `${progress}%`;
+                            progress_p.innerText = `${progress}%`;
+                        }
+                    ).then(function(content) {
+                        // حفظ الملف عند الانتهاء
                         saveAs(content, `${إسم_الملف}.zip`);
+
+                        setTimeout(() => {
+                            progress_popup.style.display = "none";
+                        }, 500);
                     });
                 }
             });
@@ -687,7 +697,6 @@ function أكثر_من_نص(texts, إسم_الملف = "الصور") {
     }, 100);
 }
 
-// تنزيل الإقتباس
 submitButton_.onclick = () => {
     fastMethod == "edit"? updateText(false, true, true) : "";
 
