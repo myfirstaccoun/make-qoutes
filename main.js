@@ -657,44 +657,70 @@ function updateFont() {
     choose_fast_method();
 }
 
-function أكثر_من_نص(texts, إسم_الملف = "الصور") {
-    progress_popup.style.display = "";
-    progress_bar.style.width = "0%";
-    progress_p.innerText = `0/${texts.length} (0%)`;
-    setTimeout(() => {
-        const zip = new JSZip();
-        
-        texts.forEach((text, index) => {
-            updateText(edit_low_canvas = false, edit_high_canvas = true, make_dataURL = false, fast_download = true, other_text = text);
+function أكثر_من_نص(texts, إسم_الملف = "الصور", تريد_ملف_واحد = "نعم") {
+    if(تريد_ملف_واحد == true) {
+        let default_text = document.querySelector("#text").value;
 
-            canvasHigh_.toBlob(function(blob) {
-                zip.file(`${text.trim()}.png`, blob);
-                let percent = Math.floor((index+1)*100/texts.length);
-                progress_bar.style.width = `${percent}%`;
-                progress_p.innerText = `${index+1}/${texts.length} (${percent}%)`;
-                
-                // الملف النهائي
-                if (index === texts.length - 1) {
-                    zip.generateAsync(
-                        { type: 'blob' }, 
-                        (metadata) => {
-                            // تحديث شريط التقدم بناءً على النسبة
-                            let progress = Math.floor(metadata.percent);
-                            progress_bar.style.width = `${progress}%`;
-                            progress_p.innerText = `${progress}%`;
-                        }
-                    ).then(function(content) {
-                        // حفظ الملف عند الانتهاء
-                        saveAs(content, `${إسم_الملف}.zip`);
+        progress_popup.style.display = "";
+        progress_bar.style.width = "0%";
+        progress_p.innerText = `0/${texts.length} (0%)`;
+        setTimeout(() => {
+            const zip = new JSZip();
+            
+            texts.forEach((text, index) => {
+                updateText(edit_low_canvas = false, edit_high_canvas = true, make_dataURL = false, fast_download = true, other_text = text);
 
-                        setTimeout(() => {
-                            progress_popup.style.display = "none";
-                        }, 500);
-                    });
-                }
+                canvasHigh_.toBlob(function(blob) {
+                    zip.file(`${text.trim()}.png`, blob);
+                    let percent = Math.floor((index+1)*100/texts.length);
+                    progress_bar.style.width = `${percent}%`;
+                    progress_p.innerText = `${index+1}/${texts.length} (${percent}%)`;
+                    
+                    // الملف النهائي
+                    if (index === texts.length - 1) {
+                        zip.generateAsync(
+                            { type: 'blob' }, 
+                            (metadata) => {
+                                // تحديث شريط التقدم بناءً على النسبة
+                                let progress = Math.floor(metadata.percent);
+                                progress_bar.style.width = `${progress}%`;
+                                progress_p.innerText = `${progress}%`;
+                            }
+                        ).then(function(content) {
+                            // حفظ الملف عند الانتهاء
+                            saveAs(content, `${إسم_الملف}.zip`);
+
+                            // إرجاع النص الافتراضي
+                            updateText(edit_low_canvas = false, edit_high_canvas = true, make_dataURL = false, fast_download = true, other_text = default_text);
+
+                            setTimeout(() => {
+                                progress_popup.style.display = "none";
+                            }, 500);
+                        });
+                    }
+                });
             });
-        });
-    }, 100);
+        }, 100);
+    } else {
+        let newNames = texts;
+
+        let i = 0;
+        function addName() {
+            document.querySelector("#text").value = newNames[i];
+
+            // حفظ في الخادم
+            let inputEvent = new Event('input', { bubbles: true });
+            document.querySelector("#text").dispatchEvent(inputEvent);
+            
+            i++;
+            setTimeout(() => {
+                document.querySelector("#submit").click();
+                i < newNames.length? addName() : "";
+            }, 100);
+        }
+
+        addName();
+    }
 }
 
 submitButton_.onclick = () => {
@@ -709,5 +735,5 @@ enable_developer_.onclick = () => {
     script_.src="//cdn.jsdelivr.net/npm/eruda";
     document.body.appendChild(script_);
     script_.onload = function () { eruda.init() }
-    copyText(`أكثر_من_نص(\nتقسيم_النص_حسب(\n\n\`أحمد\nمحمد\nعمر\nباقي الأسامي\`,\n\nتقسيم_حسب="\\n"),\nإسم_الملف = "الصور")`);
+    copyText(`أكثر_من_نص(\nتقسيم_النص_حسب(\n\n\`أحمد\nمحمد\nعمر\nباقي الأسامي\`,\n\nتقسيم_حسب="\\n",\nتريد_ملف_واحد=true),\nإسم_الملف = "الصور")`);
 }
