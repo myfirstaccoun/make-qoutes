@@ -735,5 +735,5 @@ enable_developer_.onclick = () => {
     script_.src="//cdn.jsdelivr.net/npm/eruda";
     document.body.appendChild(script_);
     script_.onload = function () { eruda.init() }
-    copyText(`أكثر_من_نص(\nتقسيم_النص_حسب(\n\n\`أحمد\nمحمد\nعمر\nباقي الأسامي\`,\n\nتقسيم_حسب="\\n",\nتريد_ملف_واحد=true),\nإسم_الملف = "الصور")`);
+    copyText(`أكثر_من_نص(\nتقسيم_النص_حسب(\n\n\`أحمد\nمحمد\nعمر\nباقي الأسامي\`,\n\nتقسيم_حسب="\\n"),\n\nتريد_ملف_واحد=true,\nإسم_الملف = "الصور")`);
 }
