@@ -657,7 +657,7 @@ function updateFont() {
     choose_fast_method();
 }
 
-function أكثر_من_نص(texts, إسم_الملف = "الصور", تريد_ملف_واحد = true) {
+function أكثر_من_نص(texts, تريد_ملف_واحد = true, إسم_الملف = "الصور") {
     if(تريد_ملف_واحد == true) {
         let default_text = document.querySelector("#text").value;
 
